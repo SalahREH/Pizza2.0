@@ -1,0 +1,62 @@
+section{
+    display: flex;
+    flex-direction: column;
+align-items: center;
+    z-index: -1;
+    position: relative;
+}
+
+
+
+.img-pizza1, .img-pizza2, .img-pizza3{
+    transition: all 1s;
+}
+
+
+.position1{
+width: 40%;
+position: absolute;
+    top: 0;
+    left: 30%;
+    transition: all 1s;
+    transition-timing-function: cubic-bezier(0.39, 0.19, 0.12, 1.43);
+}
+.position2{
+    width: 30%;
+    position: absolute;
+    top: 20vh;
+    left: 85%;
+    transition: all 1s;
+
+}
+.position3{
+    width: 30%;
+    position: absolute;
+    top: 20vh;
+    left: -15%;
+    transition: all 1s;
+
+    
+}
+.position4{
+    display: none;
+}
+
+
+.pizza-m{
+    width: 40%;
+    top: 0;
+    left: 30%;
+}
+
+.pizza-s{
+    width: 30%;
+    top: 0;
+    left: 35%;
+}
+
+.pizza-l{
+    width: 50%;
+    top: 0;
+    left: 25%;
+}
