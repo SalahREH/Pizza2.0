@@ -9,6 +9,7 @@ body {
     overflow: hidden;
 }
 
-.main-page {
-    display:none;
+.redirect{
+    display: none;
 }
+

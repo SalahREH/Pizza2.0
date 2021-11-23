@@ -10,6 +10,7 @@ header{
 }
 .chart-icon {
     width: 2.5vw; 
+    cursor: pointer;
 }
 
 .hamburger-icon{
