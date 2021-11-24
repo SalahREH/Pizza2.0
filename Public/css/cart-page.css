@@ -7,8 +7,13 @@
 
 .header-cartpage img {
     width: auto;
-    height: 5.5em;
+    height: 10vh;
 }
+
+.list-pizza {
+    height: 70vh;
+}
+
 .list-pizza-selected {
     display: flex;
     justify-content: space-between;
@@ -61,6 +66,7 @@
     display: flex;
     justify-content: space-evenly;
     margin: 2em  0;
+    height: 10vh;
 }
 
 .buy-now button{

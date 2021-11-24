@@ -39,7 +39,7 @@ let pizzas = [
     
 ]
 
-let carritoarray = []
+let carrito = []
 
 let main = document.querySelector("main")
 function printhtml(index){
@@ -83,22 +83,55 @@ function printhtml(index){
         <div class="pricing">
             <h3>PRICE</h3>
             <p class="precio">$${pizzas[index].precio}</p>
-            <button class="add-cart"><img src="img/iconobotonpricing.png">Add to box</button>
+            <button class="add-cart" onclick="addToCart(pizzas[numero].id)"><img src="img/iconobotonpricing.png">Add to box</button>
         </div>
     </div>
 </div>`
     updateListeners()
 }
 
+
 let section = document.querySelector("section")
 function printsection(index){
+
+
     section.innerHTML =  `<img src="./img/pizza1.png" class="img-pizza1 position${pizzas[index].id} pizza-${pizzas[index].size}" alt="pizza1">
-    <img src="./img/pizza2.png" class="img-pizza2 position${pizzas[index+1].id}" alt="pizza2">
-    <img src="./img/pizza3.png" class="img-pizza3 position${pizzas[index+2].id}" alt="pizza3">
+    <img src="./img/pizza2.png" class="img-pizza2 position2" alt="pizza2">
+    <img src="./img/pizza3.png" class="img-pizza3 position3" alt="pizza3">
     <img src="./img/pizza4.png" class="img-pizza4 position4" alt="pizzaParce">`
     updateListeners()
 }
 
+let cartItemsEl  = document.querySelector(".list-pizza")
+function printCartItems(){
+    cartItemsEl.innerHTML =  ""
+    carrito.forEach((pizza)  => {
+    cartItemsEl.innerHTML += `
+            <div class="list-pizza-selected">
+                <div class="pizza-info">
+                    <div class="pizza-selected-text">
+                        <h2>${pizza.nombre}</h2>
+                        <h3>${pizza.subtitulo}</h3>
+                        <p>
+                            ${pizza.descripcion}
+                        </p>
+                        <button>Add Toppings</button> <!--botón sin funcionalidad-->
+                    </div>
+                </div>
+                <div class="pizza-selected-quantity">
+                    <button onclick="changeQuantity("RESTA", ${pizza.id})">-</button>
+                    <p>${pizza.quantity}</p>
+                    <button onclick="changeQuantity("SUMA", ${pizza.id})">+</button>
+                </div>
+                <div class="pizza-selected-price">
+                    <p>
+                        Price: $${pizza.precio}
+                    </p>
+                </div>
+            </div>
+    `
+    })
+}
 
 let numero = 0
 printhtml(0);
@@ -118,6 +151,39 @@ function retroceder() {
     
 }
 
+function addToCart(id){
+    let item  = pizzas.find((pizza) =>  pizza.id === id)
+    carrito.some((pizza) => pizza.id  ===  id)? alert("Este producto ya esta en el carrito") : carrito.push({...item, quantity: 1});
+    updateCart()
+}
+
+function changeQuantity(action, id){
+    carrito = carrito.map((pizza) => {
+        let quantity = pizza.quantity
+
+        if (pizza.id  === id){
+            switch(action){
+                case  "SUMA" :
+                    quantity++
+                break;
+                case  "RESTA" :
+                    quantity--
+                break;
+            }
+        }
+        
+        return {
+            ...pizza,
+            quantity,
+        }
+        
+    })
+}
+
+function updateCart(){
+    printCartItems()
+    // printsubtotal()
+}
 
 function updateListeners () {
     document.querySelector(".scroll-right").addEventListener("click", adelantar)
@@ -133,7 +199,6 @@ function updateListeners () {
     document.querySelectorAll(".chart-link").forEach(element => {
         element.addEventListener("click",cartpage)
     });
-    document.querySelector(".add-cart").addEventListener("click",pushcarrito)
 }
 
 function sizem(){
@@ -151,10 +216,7 @@ function sizel(){
 
 }
 
-function pushcarrito(){
-    carritoarray.push(pizzas[numero])
-    // localStorage.setItem("carrito",carritoarray)
-}
+
 
 
 
@@ -177,11 +239,11 @@ function togglesizem(){
     document.querySelector(".size-l").classList.toggle("active", false)
 }
 
-// function togglepizzas(){
-//     document.querySelector(".position1").classList.toggle("pizza-s", true)
-//     document.querySelector(".position1").classList.toggle("pizza-m", false)
-//     document.querySelector(".position1").classList.toggle("pizza-l", false)
-// }
+function togglepizzas(){
+    document.querySelector(".position1").className = ""
+    document.querySelector(".position1").classList.toggle("pizza-m", false)
+    document.querySelector(".position1").classList.toggle("pizza-l", false)
+}
 
 // function togglepizzal(){
 //     document.querySelector(".position1").classList.toggle("pizza-l", true)
@@ -220,14 +282,14 @@ window.onload = function() {
           switch(operacion){
     
              case 'SUMA':
-             //
-             cantidadPizas_temporal = cantidadPizas_temporal + 1;
+                //
+                cantidadPizas_temporal = cantidadPizas_temporal + 1;
              break;
  
              case 'RESTA':
-             //
-             if (cantidadPizas_temporal != 1)
-                 cantidadPizas_temporal = cantidadPizas_temporal - 1;
+                //
+                if (cantidadPizas_temporal != 1)
+                    cantidadPizas_temporal = cantidadPizas_temporal - 1;
              break;
      }
      // Sobreescribir P
