@@ -5,40 +5,46 @@ let pizzas = [
         nombre: "PIZZA PEPPERONI",
         subtitulo: "PIZZA OF THE MONTH",
         descripcion: "Mild and creamy cheese, black olives, zesty, pepperoni & our <br>signature Italian-Style Pizza Sauce.",
-        precio: 14.99,
+        precio: {S: 14.99,  M: 19.99, L: 24.99,},
         imagen: "laimagen",
-        size:'m'
+        size:'M',
+        quantity: 1
     },
     {
         id: 2,
-        nombre: "PIZZA de jamon y yogur",
+        nombre: "PIZZA SUPREMA",
         subtitulo: "PIZZA OF THE MONTH",
         descripcion: "Spiced tomato, onion, parsley, sausage, pickles, mozzarella.",
-        precio: 69.99,
+        precio: {S: 42.09,  M: 69.99, L: 84.99},
         imagen: "laimagen",
-        size:'m'
+        size:'M',
+        quantity: 1
     },
     {
         id: 3,
-        nombre: "PIZZA de patatas",
+        nombre: "PIZZA DE JAMON Y QUESO",
         subtitulo: "PIZZA OF THE MONTH",
         descripcion: "Tomato, olives, artichoke, onion, bacon, mozzarella, cheddar.",
-        precio: 42.09,
+        precio: {S: 30.99,  M: 42.09, L: 59.99},
         imagen: "laimagen",
-        size:'m'
+        size:'M',
+        quantity: 1
     },
     {
         id: 4,
-        nombre: "PIZZA DE pan",
+        nombre: "PIZZA DE PAN",
         subtitulo: "PIZZA OF THE MONTH",
         descripcion: "pan.",
-        precio: 1.99,
+        precio: {S: 1.99,  M: 2.99, L: 3.99},
         imagen: "laimagen",
-        size:'m'
+        size:'M',
+        quantity: 1
     },
     
 ]
-
+let numero = 0
+let size = pizzas[numero].size
+let selectedsize = 'M';
 let carrito = []
 
 let main = document.querySelector("main")
@@ -60,7 +66,7 @@ function printhtml(index){
                 <h3>Quantity</h3>
                 <div class="quantity-buttons">
                     <button class="q-minus" onclick="control_cantidadPizzas('RESTA')">-</button>
-                    <p class="q-number">1</p>
+                    <p class="q-number">${pizzas[index].quantity}</p>
                     <button class="q-plus" onclick="control_cantidadPizzas('SUMA')">+</button>
                 </div>
             </div>
@@ -82,7 +88,7 @@ function printhtml(index){
         </div>
         <div class="pricing">
             <h3>PRICE</h3>
-            <p class="precio">$${pizzas[index].precio}</p>
+            <p class="precio">$${pizzas[index].precio[size]}</p>
             <button class="add-cart" onclick="addToCart(pizzas[numero].id)"><img src="img/iconobotonpricing.png">Add to box</button>
         </div>
     </div>
@@ -119,11 +125,12 @@ function printCartItems(){
                     </div>
                 </div>
                 <div class="pizza-selected-quantity">
-                    <button onclick="changeQuantity("RESTA", ${pizza.id})">-</button>
+                    <button onclick="changeQuantity('RESTA', ${pizza.id})">-</button>
                     <p>${pizza.quantity}</p>
-                    <button onclick="changeQuantity("SUMA", ${pizza.id})">+</button>
+                    <button onclick="changeQuantity('SUMA', ${pizza.id})">+</button>
                 </div>
                 <div class="pizza-selected-price">
+                    <button onclick="removeFromCart(${pizza.id})">x</button>
                     <p>
                         Price: $${pizza.precio}
                     </p>
@@ -133,7 +140,19 @@ function printCartItems(){
     })
 }
 
-let numero = 0
+function printprice(){
+    document.querySelector(".precio").innerText = `$${pizzas[numero].precio[size]}`
+}
+
+let subtotalEl = document.querySelector(".subtotal");
+function printsubtotal(){
+    let totalPrice = 0;
+    carrito.forEach((pizza)=>{
+        totalPrice +=  pizza.precio * pizza.quantity
+    })
+    subtotalEl.innerText =  `Total price: $${totalPrice.toFixed(2)}`
+}
+
 printhtml(0);
 printsection(0);
 
@@ -148,41 +167,61 @@ function retroceder() {
     numero>0 ? numero-- : '';
     printhtml(numero)
     printsection(numero)
-    
 }
 
 function addToCart(id){
     let item  = pizzas.find((pizza) =>  pizza.id === id)
-    carrito.some((pizza) => pizza.id  ===  id)? alert("Este producto ya esta en el carrito") : carrito.push({...item, quantity: 1});
+    console.log(item)
+    carrito.some((pizza) => pizza.id  ===  id)? changeQuantity('SUMA', id) : carrito.push(item);
+    changeprice(id)
     updateCart()
+}
+
+function removeFromCart(id){
+    carrito = carrito.filter(pizza => pizza.id !== id)
+    updateCart();
+}
+
+function changeprice(id){
+    let cartItem = carrito.find((pizza)  => pizza.id === id)
+    cartItem.precio = cartItem.precio[size]
 }
 
 function changeQuantity(action, id){
     carrito = carrito.map((pizza) => {
-        let quantity = pizza.quantity
-
+        let oldquantity = pizza.quantity
+        
         if (pizza.id  === id){
-            switch(action){
-                case  "SUMA" :
-                    quantity++
-                break;
-                case  "RESTA" :
-                    quantity--
-                break;
+            if (action  === "RESTA" && oldquantity > 1){
+                oldquantity--
+            }
+            else if(action === "SUMA"){
+                oldquantity++
             }
         }
+        // if (pizza.id  === id){
+        //     switch(action){
+        //         case  "SUMA" :
+        //             oldquantity++
+        //         break;
+        //         case  "RESTA" :
+        //             oldquantity--
+        //         break;
+        //     }
+        // }
+
         
         return {
             ...pizza,
-            quantity,
+            quantity: oldquantity
         }
-        
     })
+    updateCart()
 }
 
 function updateCart(){
     printCartItems()
-    // printsubtotal()
+    printsubtotal()
 }
 
 function updateListeners () {
@@ -193,33 +232,19 @@ function updateListeners () {
     document.querySelector(".size-s").addEventListener("click",togglesizes)
     // document.querySelector(".scroll-right").addEventListener("click", togglepizzam)
     // document.querySelector(".scroll-left").addEventListener("click", togglepizzam)
-    document.querySelector(".size-m").addEventListener("click",sizem)
-    document.querySelector(".size-l").addEventListener("click",sizel)
-    document.querySelector(".size-s").addEventListener("click",sizes)
+    document.querySelector(".size-m").addEventListener("click",function () {changesize("M")})
+    document.querySelector(".size-l").addEventListener("click",function () {changesize("L")})
+    document.querySelector(".size-s").addEventListener("click",function () {changesize("S")})
     document.querySelectorAll(".chart-link").forEach(element => {
         element.addEventListener("click",cartpage)
     });
 }
 
-function sizem(){
-    pizzas[numero].size = "m"
+function changesize(value){
+    size = value
+    printprice()
     printsection(numero)
 }
-function sizes(){
-    pizzas[numero].size = "s"
-    printsection(numero)
-
-}
-function sizel(){
-    pizzas[numero].size = "l"
-    printsection(numero)
-
-}
-
-
-
-
-
 
 
 
@@ -273,30 +298,29 @@ window.onload = function() {
      //functionTest();
 
 };
- 
+   function printquantity(){
+       // Sobreescribir P
+     document.querySelector('.q-number').innerText = pizzas[numero].quantity;
+   }
+
    function control_cantidadPizzas(operacion){
- 
-     var cantidadPizas_temporal =  document.querySelector('.q-number').innerText;
-     cantidadPizas_temporal = parseInt(cantidadPizas_temporal);
-     
-          switch(operacion){
+    // let cantidadPizas =  pizzas[numero].quantity;
+        switch(operacion){
     
-             case 'SUMA':
+            case 'SUMA':
                 //
-                cantidadPizas_temporal = cantidadPizas_temporal + 1;
-             break;
+                pizzas[numero].quantity = pizzas[numero].quantity + 1;
+            break;
  
-             case 'RESTA':
+            case 'RESTA':
                 //
-                if (cantidadPizas_temporal != 1)
-                    cantidadPizas_temporal = cantidadPizas_temporal - 1;
-             break;
+                if (pizzas[numero].quantity > 1)
+                pizzas[numero].quantity = pizzas[numero].quantity - 1;
+            break;
      }
-     // Sobreescribir P
-     document.querySelector('.q-number').innerText = cantidadPizas_temporal;
-     
+    printquantity()
   }
+
 function cargarDatosIniciales(){}
 
-//<input class="q-number" type="text" value="1"  readonly onmousedown="return false"></input>
 

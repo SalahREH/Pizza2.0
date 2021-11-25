@@ -43,14 +43,14 @@ position: absolute;
 }
 
 
-.pizza-m{
+.pizza-M{
     transform: scale(100%);
 }
 
-.pizza-s{
+.pizza-S{
     transform: scale(75%);
 }
 
-.pizza-l{
+.pizza-L{
     transform: scale(125%);
 }

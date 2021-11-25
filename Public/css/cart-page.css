@@ -55,9 +55,13 @@
 }
 .pizza-selected-price {
     display: flex;
-    align-items: flex-end;
+    flex-direction: column;
+    justify-content: space-around;
 }
-
+.pizza-selected-price button{
+    width: 2em;
+    height: 2em;
+}
 .pizza-selected-price p {
     font-weight: bold;
 }
