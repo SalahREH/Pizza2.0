@@ -1,8 +1,26 @@
 .header-cartpage {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     margin: 1.5em 6em;
     align-self: center;
+    align-items: center;
+}
+.Titulo{ 
+  display: flex;
+  justify-content: center;
+
+
+ }
+  
+ .chart-link{
+     position: absolute;
+     top: 50px;
+     left: 1351px ;
+ } 
+
+  .chart-icon{
+  margin-left: auto;
+  display: flex;
 }
 
 .header-cartpage img {

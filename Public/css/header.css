@@ -11,6 +11,9 @@ header{
 .chart-icon {
     width: 2.5vw; 
     cursor: pointer;
+    margin-left: auto;
+    display: inline;
+    justify-content: flex-end;
 }
 
 .hamburger-icon{
@@ -27,6 +30,7 @@ header{
     background-color: black;
     border-color: black;
     border-radius: 20px;
+    margin: 2px;
 }
 
 .logo{
